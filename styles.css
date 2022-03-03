@@ -15,8 +15,6 @@ form {
   flex-flow: column nowrap;
   align-items: flex-start;
   background-color: transparent;
-  overflow-y: auto;
-  max-height: 120px;
 }
 
 ::-webkit-scrollbar {
@@ -28,7 +26,6 @@ form {
   border-radius: 10px;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #a19e9e;
   border-radius: 10px;

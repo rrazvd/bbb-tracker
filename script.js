@@ -1,4 +1,5 @@
-const API_PATH = config.API_PATH;
+import { API_PATH } from "./config.js";
+import { followParticipant } from "./background.js";
 
 const participantsNames = {
   arthur: "Arthur Aguiar",
@@ -19,46 +20,14 @@ const participantsNames = {
 };
 
 function handleOnClickParticipant() {
-  chrome.storage.sync.set({ subscribedParticipant: this.id });
-  followParticipant();
-}
-
-setInterval(() => {
-  followParticipant();
-}, 15000);
-
-function followParticipant() {
-  chrome.storage.sync.get(
-    "subscribedParticipant",
-    function ({ subscribedParticipant: participant }) {
-      if (participant) {
-        fetch(API_PATH + "/cams/labels/" + participant, {
-          method: "GET",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data) {
-              let link = undefined;
-
-              if (data?.cams?.length > 0) {
-                const cam = data.cams[0];
-                link = cam["stream_link"];
-              } else if (data?.prev_cams?.length > 0) {
-                const prev_cam = data.prev_cams[0];
-                link = prev_cam["stream_link"];
-              }
-
-              if (link) {
-                chrome.tabs.query(
-                  { active: true, currentWindow: true },
-                  (tabs) => {
-                    let url = tabs[0].url;
-                    if (url !== link) chrome.tabs.update({ url: link });
-                  }
-                );
-              }
-            }
-          });
+  chrome.storage.sync.get("participant", ({ participant }) => {
+      if (participant === this.id) {
+        this.checked = false;
+        chrome.storage.sync.clear();
+      }
+      else {
+        chrome.storage.sync.set({ participant: this.id });
+        followParticipant();
       }
     }
   );
@@ -68,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const msgError = document.getElementById("error");
   const msgLoading = document.getElementById("loading");
   const cta = document.getElementById("cta");
-  participants = document.getElementById("participants");
+  const form = document.getElementById("participants");
 
   fetch(API_PATH + "/labels", {
     method: "GET",
@@ -79,9 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       msgError.style.display = "none";
       msgLoading.style.display = "none";
 
-      const frag = document.createDocumentFragment();
-
-      /* create radio form group with participants*/
+      /* fill form group with participants options*/
       data.forEach((participant) => {
         const label = document.createElement("label");
         const radio = document.createElement("input");
@@ -99,18 +66,16 @@ document.addEventListener("DOMContentLoaded", () => {
         option.style.cssText = "display: flex; padding: 5px;";
         option.appendChild(radio);
         option.appendChild(label);
-
-        frag.appendChild(option);
+        form.appendChild(option);
       });
+
+      /* show cta */
       cta.style.display = "flex";
-      participants.appendChild(frag);
 
       /* check if already exists a subscribed participant */
-      chrome.storage.sync.get(
-        "subscribedParticipant",
-        function ({ subscribedParticipant: participant }) {
+      chrome.storage.sync.get("participant", ({ participant }) => {
           if (participant) {
-            radio = document.getElementById(participant);
+            const radio = document.getElementById(participant);
             radio.checked = true;
           }
         }
@@ -120,5 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
       msgLoading.style.display = "none";
       cta.style.display = "none";
       msgError.style.display = "flex";
+      console.log(error);
     });
 });
