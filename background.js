@@ -9,7 +9,7 @@ chrome.alarms.onAlarm.addListener(() => {
 export function followParticipant() {
   chrome.storage.sync.get("participant", ({ participant }) => {
     if (participant) {
-      console.log("Tracking participant: " + participant + "...");
+      console.log(`Tracking participant: ${participant}...`);
       fetch(API_PATH + "/cams/labels/" + participant, {
         method: "GET",
       })
@@ -25,12 +25,7 @@ export function followParticipant() {
 
             if (cam) {
               console.log(
-                "Participant tracked: " +
-                  participant +
-                  " on " +
-                  cam["location"] +
-                  " " +
-                  cam["name"]
+                `Participant tracked: ${participant} on ${cam["location"]} ${cam["name"]}`
               );
               chrome.tabs.query(
                 { active: true, currentWindow: true },

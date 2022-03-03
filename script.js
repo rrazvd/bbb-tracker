@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const msgError = document.getElementById("error");
   const msgLoading = document.getElementById("loading");
   const cta = document.getElementById("cta");
-  const form = document.getElementById("participants");
+  const form = document.getElementById("form");
 
   fetch(API_PATH + "/labels", {
     method: "GET",
