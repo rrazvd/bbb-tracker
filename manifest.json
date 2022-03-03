@@ -4,7 +4,7 @@
   "name": "Rastreador BBB",
   "description": "Rastreia automaticamente os participantes da casa mais vigiada do Brasil.",
   "author": "Rafael Azevedo",
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "alarms"],
   "action": {
     "default_title": "Rastreador BBB",
     "default_popup": "index.html",

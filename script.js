@@ -21,16 +21,14 @@ const participantsNames = {
 
 function handleOnClickParticipant() {
   chrome.storage.sync.get("participant", ({ participant }) => {
-      if (participant === this.id) {
-        this.checked = false;
-        chrome.storage.sync.clear();
-      }
-      else {
-        chrome.storage.sync.set({ participant: this.id });
-        followParticipant();
-      }
+    if (participant === this.id) {
+      this.checked = false;
+      chrome.storage.sync.clear();
+    } else {
+      chrome.storage.sync.set({ participant: this.id });
+      followParticipant();
     }
-  );
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -74,12 +72,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       /* check if already exists a subscribed participant */
       chrome.storage.sync.get("participant", ({ participant }) => {
-          if (participant) {
-            const radio = document.getElementById(participant);
-            radio.checked = true;
-          }
+        if (participant) {
+          const radio = document.getElementById(participant);
+          radio.checked = true;
         }
-      );
+      });
     })
     .catch((error) => {
       msgLoading.style.display = "none";
