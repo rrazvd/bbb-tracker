@@ -2,7 +2,7 @@
 
 Chrome extension to track participants of Big Brother Brasil through an [API](https://github.com/rrazvd/bbb-face-recognizer)
 
-![Extension visualization](screenshots/extension.png)
+<img src="screenshots/extension.png" width="124" height="277">
 
 ## Instalation
 
